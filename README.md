@@ -15,9 +15,11 @@ Every model can be used but they have different performance.
 ## Usage
 
 ```bash
-
-
+python3 main.py -r input_path [-e ouputname]
 ```
+where :
+    -r : define the input path, ex. test.jpg
+    -e : define the output name, ex. testUpscaled.jpg (optional)
 
 ## License
 

@@ -1,5 +1,3 @@
-sys
 numpy
 tqdm
-time
-opencv-contrib-pythonen
+opencv-contrib-python

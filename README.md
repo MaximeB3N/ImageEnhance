@@ -9,7 +9,7 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the req
 pip install -r requirements.txt
 ```
 
-Download a model [here](https://github.com/Saafke/EDSR_Tensorflow/tree/master/models)
+Download the model called EDSR_x3.pb [here](https://github.com/Saafke/EDSR_Tensorflow/tree/master/models)
 Every model can be used but they have different performance. 
 
 ## Usage

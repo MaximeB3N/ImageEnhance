@@ -17,10 +17,11 @@ Every model can be used but they have different performance.
 ```bash
 python3 main.py -r input_path [-e ouputname]
 ```
-where :\n
+where :
+```
     -r : define the input path, ex. test.jpg\n
     -e : define the output name, ex. testUpscaled.jpg (optional)
-
+```
 ## License
 
 [[1]](https://openaccess.thecvf.com/content_cvpr_2017_workshops/w12/papers/Lim_Enhanced_Deep_Residual_CVPR_2017_paper.pdf) Bee Lim, Sanghyun Son, Heewon Kim, Seungjun Nah, and Kyoung Mu Lee, "Enhanced Deep Residual Networks for Single Image Super-Resolution," 2nd NTIRE: New Trends in Image Restoration and Enhancement workshop and challenge on image super-resolution in conjunction with CVPR 2017. 

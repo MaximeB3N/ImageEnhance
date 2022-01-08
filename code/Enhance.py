@@ -1,53 +1,88 @@
 import cv2
+import threading
+import numpy as np
 from cv2 import dnn_superres
 from tqdm import trange
 from time import time
-import Tool
-# Create an SR object
-def Enhance(name_path,ouput_name):
-    
-    sr = dnn_superres.DnnSuperResImpl_create()
+from pathlib import Path
 
-    name_init = name_path
-    name_final = ouput_name
+import code.Tool as Tool
+
+
+# Create an SR object
+def Enhance(input_path, name_final, output_path, temp_path, path_model, n_jobs=1, model_type="edsr", scale=4):
+    
     # Read image
-    image = cv2.imread(name_init)
-    if (max(image.shape[0],image.shape[1])<=1200):
-        N = 1000
-    elif (max(image.shape[0],image.shape[1])/3+1<=1200):
-        N = max(image.shape[0],image.shape[1])/3+1
+    image = cv2.imread(input_path)
+
+    if (max(image.shape[0],image.shape[1])/scale+1<=1200):
+        N = max(image.shape[0],image.shape[1])/scale+1
     else:
-        N = 1000
+        N = 800
 
         
     shape_init = image.shape
-    # Read the desired model
-    path = 'EDSR_x3.pb'
-    sr.readModel(path)
-
-    # Set the desired model and scale to get correct pre- and post-processing
-    sr.setModel("edsr", 3)
 
     #We create a list of small images that can be the model's inputs
     imagesList = Tool.cut_image(image,N)
     print("Quadrillage de l'image initiale [OK]")
 
     #We enhance every small images
-    imagesList_enhance = []
     print("Amélioration de ",len(imagesList)*len(imagesList[0])," images de taille initiale",N,"x",N,"en cours...")
-    for i in range(len(imagesList)):
-        S=[]
-        for j in trange(len(imagesList[0])):
-            S.append(sr.upsample(imagesList[i][j]))
-        imagesList_enhance.append(S)
+
+    Enhance_tile_parallel(imagesList, temp_path, path_model, n_jobs, model_type, scale)
 
     print("Amélioration de chacune des images [OK]")
 
+    imagesList_enhance = load_enhanced_images(temp_path, imagesList)
     #We reconstruct the big image with the list of enhanced images
 
-    final = Tool.reconstruct_image(imagesList_enhance, shape_init)
+    final = Tool.reconstruct_image(imagesList_enhance, shape_init, scale)
     print("Reconstruction de l'image améliorée [OK]")
 
     # Save the image
-    cv2.imwrite("./"+name_final, final)
+    if name_final is None:
+        name_final = input_path.split("/")[-1].split(".")[0] + "_enhanced.jpg"
+    path_final = str(Path(output_path) / name_final)
+
+    if path_final.endswith("jpg"):
+        cv2.imwrite(path_final, final)
+    else:
+        cv2.imwrite(path_final + ".jpg", final)
+
     print("Image enregristrée dans le dossier de ce fichier sous le nom "+name_final+" [OK]")
+
+
+def Enhance_tile(model, imagesList, temp_path, n_jobs, k):
+    for i in range(len(imagesList)):
+        for j in range(len(imagesList[0])):
+            if (i + j*len(imagesList[0]))% n_jobs== k:
+                final = model.upsample(imagesList[i][j])
+                np.save(Path(temp_path) / (str(i) + "_" + str(j) + ".npy"), final)
+
+
+def Enhance_tile_parallel(imagesList, temp_path, path_model, n_jobs, model_type, scale):
+
+    models = [dnn_superres.DnnSuperResImpl_create() for _ in range(n_jobs)]
+
+    for model in models:
+        model.readModel(path_model)
+        model.setModel(model_type, scale)
+
+    threads = [threading.Thread(target=(lambda k: Enhance_tile(models[k], imagesList, temp_path, n_jobs, k)), args=(k,)) for k in range(n_jobs)]
+
+    for thread in threads:
+        thread.start()
+
+    for thread in threads:
+        thread.join()
+
+def load_enhanced_images(temp_path, imagesList):
+
+    S = []
+    for i in range(len(imagesList)):
+        S.append([])
+        for j in range(len(imagesList[0])):
+            S[i].append(np.load(Path(temp_path) / (str(i) + "_" + str(j) + ".npy")))
+
+    return S

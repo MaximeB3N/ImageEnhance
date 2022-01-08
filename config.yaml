@@ -1,0 +1,8 @@
+input_path: "tests/very_small_pic.png"
+output_path: "tests"
+temp_path: "tests/tmp"
+name_final:
+path_model: "code/EDSR_x4.pb"
+model_type: EDSR
+scale: 4
+n_jobs: 4

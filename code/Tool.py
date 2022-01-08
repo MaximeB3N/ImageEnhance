@@ -34,8 +34,8 @@ def full_image(imagesList, image, ind_i, ind_j, i, j):
                 image[k,l,u] = ia
 
                 
-def reconstruct_image(imagesList, shape_init):
-    l,h = shape_init[0]*3,shape_init[1]*3
+def reconstruct_image(imagesList, shape_init, scale):
+    l,h = shape_init[0]*scale,shape_init[1]*scale
     image = np.zeros((l,h,3),dtype = int)
     ind_i,ind_j = 0,0
     for i in range(len(imagesList)):
@@ -48,3 +48,4 @@ def reconstruct_image(imagesList, shape_init):
         ind_i +=imagesList[i][j].shape[0]
     
     return image
+

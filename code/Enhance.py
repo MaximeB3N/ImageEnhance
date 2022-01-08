@@ -56,7 +56,7 @@ def Enhance(input_path, name_final, output_path, temp_path, path_model, n_jobs=1
 
 
 def Enhance_tile(model, imagesList, temp_path, n_jobs, k):
-    for i in range(len(imagesList)):
+    for i in trange(len(imagesList)):
         for j in range(len(imagesList[0])):
             if (i + j*len(imagesList[0]))% n_jobs== k:
                 final = model.upsample(imagesList[i][j])

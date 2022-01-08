@@ -30,17 +30,17 @@ def Enhance(input_path, name_final, output_path, temp_path, path_model, n_jobs=1
     print("Quadrillage de l'image initiale [OK]")
 
     #We enhance every small images
-    print("Amélioration de ",len(imagesList)*len(imagesList[0])," images de taille initiale",N,"x",N,"en cours...")
+    print("Amelioration de ",len(imagesList)*len(imagesList[0])," images de taille initiale",N,"x",N,"en cours...")
 
     Enhance_tile_parallel(imagesList, temp_path, path_model, n_jobs, model_type, scale)
 
-    print("Amélioration de chacune des images [OK]")
+    print("Amelioration de chacune des images [OK]")
 
     imagesList_enhance = load_enhanced_images(temp_path, imagesList)
     #We reconstruct the big image with the list of enhanced images
 
     final = Tool.reconstruct_image(imagesList_enhance, shape_init, scale)
-    print("Reconstruction de l'image améliorée [OK]")
+    print("Reconstruction de l'image amelioree [OK]")
 
     # Save the image
     if name_final is None:
@@ -52,7 +52,7 @@ def Enhance(input_path, name_final, output_path, temp_path, path_model, n_jobs=1
     else:
         cv2.imwrite(path_final + ".jpg", final)
 
-    print("Image enregristrée dans le dossier de ce fichier sous le nom "+name_final+" [OK]")
+    print("Image enregristree dans le dossier de ce fichier sous le nom "+name_final+" [OK]")
 
 
 def Enhance_tile(model, imagesList, temp_path, n_jobs, k):

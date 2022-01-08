@@ -1,4 +1,6 @@
+from genericpath import exists
 import sys
+import os
 import argparse
 import yaml
 from code.Enhance import Enhance
@@ -22,5 +24,7 @@ if __name__ == "__main__":
     n_jobs = config['n_jobs']
     model_type = config['model_type'].lower()
     scale = config['scale']
+
+    os.makedirs(temp_path, exist_ok=True)
 
     Enhance(input_path, name_final, output_path, temp_path, path_model, n_jobs=n_jobs, model_type=model_type, scale=scale)

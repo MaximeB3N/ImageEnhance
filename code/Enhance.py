@@ -15,8 +15,10 @@ def Enhance(input_path, name_final, output_path, temp_path, path_model, n_jobs=1
     # Read image
     image = cv2.imread(input_path)
 
-    if (max(image.shape[0],image.shape[1])/scale+1<=1200):
-        N = max(image.shape[0],image.shape[1])/scale+1
+    if (max(image.shape[0],image.shape[1])<=1200):
+        N = 800
+    elif (max(image.shape[0],image.shape[1])/3+1<=1200):
+        N = max(image.shape[0],image.shape[1])/3+1
     else:
         N = 800
 

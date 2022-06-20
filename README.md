@@ -1,6 +1,8 @@
 # ImageEnhance
 A Python programme using a Deep Learning model to enhance an image.
 
+Future modifications : use of the following [repository](https://github.com/swz30/MIRNetv2) providing SuperRes, Contrast Enhancement, Lowlight Enhancement and denoising models.
+
 ## Installation
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the requirements to run the python programme.
